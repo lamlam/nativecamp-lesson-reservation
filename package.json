@@ -1,0 +1,15 @@
+{
+  "name": "native-camp-reserve",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo no test"
+  },
+  "author": "Naoto Saito",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "chromedriver": "^81.0.0",
+    "nightwatch": "^1.3.4"
+  }
+}
