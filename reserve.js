@@ -64,6 +64,7 @@ async function reserve(page, teacherID, isLoggedIn = false) {
 }
 
 (async () => {
+  let browser = null;
   let options = {
     defaultViewport: {
       width: 1200,
@@ -77,7 +78,7 @@ async function reserve(page, teacherID, isLoggedIn = false) {
     options.executablePath = 'google-chrome-stable';
   }
   try {
-    const browser = await puppeteer.launch(options);
+    browser = await puppeteer.launch(options);
     const page = await browser.newPage();
 
     const isLoggedIn = await login(page, EMAIL, PASSWORD);

@@ -17,6 +17,7 @@ jobs:
         uses: ianwalter/puppeteer@3.0.0
         with:
           args: yarn
+      - run: mkdir screenshots
       - name: Reserve
         uses: ianwalter/puppeteer@3.0.0
         with:
