@@ -34,21 +34,24 @@ async function login(page, email, password) {
 
   await page.type('input[name="data[User][email]"', EMAIL);
   await page.type('input[name="data[User][password]"', PASSWORD);
-  await screenshotWithId(page);
 
   await Promise.all([
     page.waitForNavigation(),
     await page.click('button[type="submit"]'),
   ]);
   await screenshotWithId(page);
+  return true;
 }
 
-async function reserve(page, teacherID) {
+async function reserve(page, teacherID, isLoggedIn = false) {
   if (!page) {
     throw new Error('page cannot be null or undefined.');
   }
   if (!teacherID) {
     throw new Error('teacherID cannot be null or undefined.');
+  }
+  if (!isLoggedIn) {
+    throw new Error('need login before start reservation');
   }
 
   await page.goto(getTeacherPageUrl(teacherID));
@@ -72,11 +75,11 @@ async function reserve(page, teacherID) {
   try {
     const page = await browser.newPage();
 
-    await login(page, EMAIL, PASSWORD);
+    const isLoggedIn = await login(page, EMAIL, PASSWORD);
 
     const teacherIDs = TEACHER_IDS.split(',');
     for (const teacherID of teacherIDs) {
-      await reserve(page, teacherID);
+      await reserve(page, teacherID, isLoggedIn);
     }
   } catch (e) {
     console.log(e);
