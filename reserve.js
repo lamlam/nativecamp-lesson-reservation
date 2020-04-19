@@ -64,15 +64,18 @@ async function reserve(page, teacherID, isLoggedIn = false) {
 }
 
 (async () => {
-  // puppeteerを立ち上げます
-  const browser = await puppeteer.launch({
+  let options = {
     defaultViewport: {
       width: 1200,
       height: 800,
     },
-  });
-
+  };
+  if (process.env.CI) {
+    // https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox
+    options.args = ['--no-sandbox', '--disable-setuid-sandbox'];
+  }
   try {
+    const browser = await puppeteer.launch(options);
     const page = await browser.newPage();
 
     const isLoggedIn = await login(page, EMAIL, PASSWORD);
@@ -83,6 +86,7 @@ async function reserve(page, teacherID, isLoggedIn = false) {
     }
   } catch (e) {
     console.log(e);
+    process.exitCode = 1;
   } finally {
     if (browser) {
       // puppeteerを終了します
