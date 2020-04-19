@@ -1,8 +1,8 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require('puppeteer');
 
 let screenshotId = 0;
-async function screenshotWithId(page, baseName = "screenshots/screenshot") {
-  const screenshotIdString = String(screenshotId).padStart(3, "0");
+async function screenshotWithId(page, baseName = 'screenshots/screenshot') {
+  const screenshotIdString = String(screenshotId).padStart(3, '0');
   await page.screenshot({ path: `${baseName}${screenshotIdString}.png` });
   screenshotId += 1;
 }
@@ -19,7 +19,7 @@ async function screenshotWithId(page, baseName = "screenshots/screenshot") {
   try {
     const page = await browser.newPage();
     // pageを目的のURLへ移動します
-    await page.goto("https://nativecamp.net/waiting/detail/3306");
+    await page.goto('https://nativecamp.net/waiting/detail/3306');
     // スクリーンショットを取ります
     await screenshotWithId(page);
 
