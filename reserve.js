@@ -3,13 +3,15 @@ const puppeteer = require('puppeteer');
 const nativecampTopUrl = 'https://nativecamp.net/';
 const nativecampLoginUrl = 'https://nativecamp.net/login';
 
-const teacherId = 3306;
+const TEACHER_IDS = process.env.RESERVE_TEACHER_IDS;
+const EMAIL = process.env.NC_EMAIL;
+const PASSWORD = process.env.NC_PASSWORD;
 
-function getTeacherPageUrl(teacherId) {
-  if (!teacherId) {
-    throw Error('Teacher Id cannot be undefined');
+function getTeacherPageUrl(teacherID) {
+  if (!teacherID) {
+    throw new Error('teacherID cannot be null or undefined.');
   }
-  return `${nativecampTopUrl}waiting/detail/${teacherId}`;
+  return `${nativecampTopUrl}waiting/detail/${teacherID}`;
 }
 
 let screenshotId = 0;
@@ -17,6 +19,45 @@ async function screenshotWithId(page, baseName = 'screenshots/screenshot') {
   const screenshotIdString = String(screenshotId).padStart(3, '0');
   await page.screenshot({ path: `${baseName}${screenshotIdString}.png` });
   screenshotId += 1;
+}
+
+async function login(page, email, password) {
+  if (!page) {
+    throw new Error('page cannot be null or undefined.');
+  }
+  if (!email || !password) {
+    throw new Error('Email or Password cannot be null or undefined.');
+  }
+
+  await page.goto(nativecampLoginUrl);
+  await screenshotWithId(page);
+
+  await page.type('input[name="data[User][email]"', EMAIL);
+  await page.type('input[name="data[User][password]"', PASSWORD);
+  await screenshotWithId(page);
+
+  await Promise.all([
+    page.waitForNavigation(),
+    await page.click('button[type="submit"]'),
+  ]);
+  await screenshotWithId(page);
+}
+
+async function reserve(page, teacherID) {
+  if (!page) {
+    throw new Error('page cannot be null or undefined.');
+  }
+  if (!teacherID) {
+    throw new Error('teacherID cannot be null or undefined.');
+  }
+
+  await page.goto(getTeacherPageUrl(teacherID));
+  await screenshotWithId(page);
+
+  const elements = await page.$$('tr[class="free_reservable_area"');
+  for (const element of elements) {
+    await screenshotWithId(element);
+  }
 }
 
 (async () => {
@@ -30,22 +71,13 @@ async function screenshotWithId(page, baseName = 'screenshots/screenshot') {
 
   try {
     const page = await browser.newPage();
-    await page.goto(nativecampLoginUrl);
-    await screenshotWithId(page);
 
-    /*
-    await page.goto(getTeacherPageUrl(teacherId));
-    // スクリーンショットを取ります
-    await screenshotWithId(page);
+    await login(page, EMAIL, PASSWORD);
 
-    // ログインをクリック
-    const [response] = await Promise.all([
-      page.waitForNavigation(),
-      page.click('a[href=""]'),
-    ]);
-    // スクリーンショットを取ります
-    await screenshotWithId(page);
-    */
+    const teacherIDs = TEACHER_IDS.split(',');
+    for (const teacherID of teacherIDs) {
+      await reserve(page, teacherID);
+    }
   } catch (e) {
     console.log(e);
   } finally {
