@@ -1,5 +1,17 @@
 const puppeteer = require('puppeteer');
 
+const nativecampTopUrl = 'https://nativecamp.net/';
+const nativecampLoginUrl = 'https://nativecamp.net/login';
+
+const teacherId = 3306;
+
+function getTeacherPageUrl(teacherId) {
+  if (!teacherId) {
+    throw Error('Teacher Id cannot be undefined');
+  }
+  return `${nativecampTopUrl}waiting/detail/${teacherId}`;
+}
+
 let screenshotId = 0;
 async function screenshotWithId(page, baseName = 'screenshots/screenshot') {
   const screenshotIdString = String(screenshotId).padStart(3, '0');
@@ -18,18 +30,22 @@ async function screenshotWithId(page, baseName = 'screenshots/screenshot') {
 
   try {
     const page = await browser.newPage();
-    // pageを目的のURLへ移動します
-    await page.goto('https://nativecamp.net/waiting/detail/3306');
+    await page.goto(nativecampLoginUrl);
+    await screenshotWithId(page);
+
+    /*
+    await page.goto(getTeacherPageUrl(teacherId));
     // スクリーンショットを取ります
     await screenshotWithId(page);
 
     // ログインをクリック
     const [response] = await Promise.all([
       page.waitForNavigation(),
-      page.click('a[href="https://nativecamp.net/login"]'),
+      page.click('a[href=""]'),
     ]);
     // スクリーンショットを取ります
     await screenshotWithId(page);
+    */
   } catch (e) {
     console.log(e);
   } finally {
