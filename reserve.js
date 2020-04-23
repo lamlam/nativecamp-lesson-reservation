@@ -71,11 +71,9 @@ async function reserve(page, teacherID, isLoggedIn = false) {
       height: 800,
     },
   };
-  if (process.env.CI) {
+  if (process.env.GITHUB_ACTION) {
     // https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox
     options.args = ['--no-sandbox', '--disable-setuid-sandbox'];
-    // https://github.com/ianwalter/puppeteer
-    options.executablePath = 'google-chrome-stable';
   }
   try {
     browser = await puppeteer.launch(options);

@@ -8,13 +8,17 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  Reserve:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - run: mkdir screenshots
-      - run: ls
+      - name: Install
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn
       - name: Reserve
         uses: docker://zenika/alpine-chrome:with-puppeteer
         with:
@@ -23,7 +27,6 @@ jobs:
           NC_EMAIL: ${{ secrets.NC_EMAIL }}
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
-          CI: true
       - name: Archive screenshots
         uses: actions/upload-artifact@v1
         with:
