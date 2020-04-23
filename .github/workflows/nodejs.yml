@@ -13,10 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install
-        uses: docker://zenika/alpine-chrome:with-puppeteer
-        with:
-          args: yarn
       - run: mkdir screenshots
       - run: ls
       - name: Reserve
