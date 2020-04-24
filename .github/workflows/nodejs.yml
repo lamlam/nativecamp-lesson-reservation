@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mkdir screenshots
-      - name: Install
+      - name: Setup nodejs
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Install
+      - name: Install dependencies
         uses: ./
         with:
           args: yarn
