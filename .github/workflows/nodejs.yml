@@ -14,16 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mkdir screenshots
-      - run: chmod 777 screenshots
       - name: Install
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - run: yarn
       - name: Reserve
-        uses: docker://zenika/alpine-chrome:with-puppeteer
+        uses: ./
         with:
-          args: ls -al
+          args: yarn reserve
         env:
           NC_EMAIL: ${{ secrets.NC_EMAIL }}
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
