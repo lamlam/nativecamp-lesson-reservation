@@ -23,7 +23,7 @@ jobs:
       - name: Reserve
         uses: docker://zenika/alpine-chrome:with-puppeteer
         with:
-          args: ls -al && yarn reserve
+          args: ls -al
         env:
           NC_EMAIL: ${{ secrets.NC_EMAIL }}
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
