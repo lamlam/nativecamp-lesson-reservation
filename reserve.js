@@ -96,7 +96,10 @@ async function isLoggedIn(page) {
     throw new Error('page cannot be null or undefined.');
   }
 
-  await page.goto(nativecampMypageUrl);
+  await page.goto(nativecampMypageUrl).catch((e) => {
+    console.log(e);
+    return false;
+  });
 
   // if succeeded to login, location is mypage
   // otherwise locaiton is login page
@@ -265,6 +268,7 @@ async function reserve(page, teacherID) {
     throw new Error('teacherID cannot be null or undefined.');
   }
   if (!isLoggedIn(page)) {
+    await screenshotWithId(page);
     throw new Error('need login before start reservation');
   }
 
