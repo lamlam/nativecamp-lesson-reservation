@@ -9,29 +9,47 @@ on:
   schedule:
     - cron: '*/10 0-15 * * *'
 
+env:
+  PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
+  PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-unstable
+
 jobs:
   Reserve:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
+
       - run: mkdir screenshots
+
       - name: Setup nodejs
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - name: Install dependencies
-        uses: ./
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          args: yarn
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn
+
       - name: Reserve
-        uses: ./
+        uses: lamlam/headless-chrome-nodejs@1.0.1
         with:
           args: yarn reserve
         env:
           NC_EMAIL: ${{ secrets.NC_EMAIL }}
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
+
       - name: Archive screenshots
         uses: actions/upload-artifact@v1
         with:
