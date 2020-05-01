@@ -1,5 +1,0 @@
-name: 'Node Action with Chrome Headless'
-description: 'Node Action with Chrome Headless'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
