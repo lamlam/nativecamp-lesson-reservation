@@ -80,8 +80,8 @@ async function login(page, email, password) {
   await page.goto(nativecampLoginUrl);
   await screenshotWithId(page);
 
-  await page.type('input[name="data[User][email]"', EMAIL);
-  await page.type('input[name="data[User][password]"', PASSWORD);
+  await page.type('input[name="data[User][email]"]', EMAIL);
+  await page.type('input[name="data[User][password]"]', PASSWORD);
 
   await Promise.all([
     page.waitForNavigation(),
