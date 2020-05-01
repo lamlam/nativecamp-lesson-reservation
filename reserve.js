@@ -294,6 +294,7 @@ async function reserve(page, teacherID) {
       width: 1200,
       height: 800,
     },
+    slowMo: 100,
   };
   if (process.env.GITHUB_ACTION) {
     // https://github.com/puppeteer/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox
