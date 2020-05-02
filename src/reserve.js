@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const puppeteer = require('puppeteer');
 
 const TEACHER_IDS = process.env.RESERVE_TEACHER_IDS;
@@ -42,7 +43,7 @@ const getPreferableTimeSlot = () => {
       '火': ['08:00', '08:30', '21:00'],
     }
   */
-  let preferableTimeSlot = {};
+  const preferableTimeSlot = {};
   [
     DAY_OF_WEEK.mon,
     DAY_OF_WEEK.tue,
@@ -206,7 +207,7 @@ async function findReservableTimeAndReserve(
   const day = await reservableAreaElement.$eval('.day', (node) =>
     node.innerText.substring(1, 2),
   );
-  if (!reservableTime.hasOwnProperty(day)) {
+  if (!Object.prototype.hasOwnProperty.call(reservableTime, day)) {
     return false;
   }
 
@@ -235,7 +236,7 @@ async function findReservableTimeAndReserve(
   }
 
   let isReserved = false;
-  for (reserveButton of reserveButtons) {
+  for (const reserveButton of reserveButtons) {
     if (isReserved) {
       break;
     }
@@ -279,7 +280,7 @@ async function reserve(page, teacherID) {
     'tr[class="free_reservable_area"]',
   );
   for (const reservableAreaElement of reservableAreaElements) {
-    isSucceded = await findReservableTimeAndReserve(
+    await findReservableTimeAndReserve(
       page,
       reservableAreaElement,
       getPreferableTimeSlot(),
@@ -289,7 +290,7 @@ async function reserve(page, teacherID) {
 
 (async () => {
   let browser = null;
-  let options = {
+  const options = {
     defaultViewport: {
       width: 1200,
       height: 800,
