@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "reserve": "node ./src/reserve.js",
-    "lint": "eslint src"
+    "lint": "eslint src && yarn tsc --noEmit",
+    "build": "tsc"
   },
   "author": "Naoto Saito",
   "license": "MIT",
