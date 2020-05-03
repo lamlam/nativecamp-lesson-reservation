@@ -6,6 +6,7 @@ export class Login {
   static SELECTOR_INPUT_EMAIL = 'input[name="data[User][email]"]';
   static SELECTOR_INPUT_PASSWORD = 'input[name="data[User][password]"]';
   static SELECTOR_SUBMIT = 'button[type="submit"]';
+  static SELECTOR_HEADER_USER_MENU = 'div.user_menu_wrap';
 
   page: Page;
   screenshotManager: ScreenshotManager;
@@ -20,6 +21,7 @@ export class Login {
   }
 
   async login(email: string, password: string): Promise<Page> {
+    console.log('Start to login');
     await this.page.goto(Login.PAGE_URL);
     await this.takeScreenshot();
 
@@ -31,7 +33,13 @@ export class Login {
       this.page.click(Login.SELECTOR_SUBMIT),
     ]);
     await this.takeScreenshot();
+    console.log('Login Succeed');
 
     return this.page;
+  }
+
+  static async isLoggedIn(page: Page): Promise<boolean> {
+    const userMenu = await page.$(Login.SELECTOR_HEADER_USER_MENU);
+    return !!userMenu;
   }
 }
