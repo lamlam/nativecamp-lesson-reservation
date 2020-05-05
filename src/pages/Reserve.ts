@@ -1,7 +1,7 @@
-import { Page } from 'puppeteer';
+import { Page, ElementHandle } from 'puppeteer';
 import { ScreenshotManager } from '../utils/ScreenshotManager';
 import { Login } from './Login';
-import { TimeSlotManager } from '../utils/TimeSlotManager';
+import { ReservableAreaHandle } from './ReservableAreaHandle';
 
 export class Reserve {
   static nativecampTopUrl = 'https://nativecamp.net/';
@@ -22,6 +22,7 @@ export class Reserve {
     RESERVE_COMPLETE_MODAL: '#dialog_schedule_reserve_complete',
     RESERVE_COMPLETE_MODAL_CLOSE_BUTTON:
       '#dialog_schedule_reserve_complete > .btn_close.close_modal',
+    RESERVABLE_AREA: 'tr.free_reservable_area',
   };
 
   page: Page;
@@ -36,15 +37,32 @@ export class Reserve {
     return this.screenshotManager.take(this.page);
   }
 
-  static getTeachersPageUrl(teacherID: number): string {
-    return `${Reserve.nativecampTopUrl}waiting/detail/${teacherID}`;
+  private async openTeacherPageUrl(teacherID: number): Promise<Page> {
+    const teacherPageUrl = `${Reserve.nativecampTopUrl}waiting/detail/${teacherID}`;
+    await this.page.goto(teacherPageUrl);
+    return this.page;
   }
 
-  async reserve(teacherIDs: Array<string>): Promise<Page> {
+  async reserve(teacherIDs: Array<number>): Promise<Page> {
     console.log('Start to reserve');
     const isLoggedIn = await Login.isLoggedIn(this.page);
     if (!isLoggedIn) {
       throw new Error('need login before start reservation');
+    }
+
+    for (const teacherID of teacherIDs) {
+      await this.openTeacherPageUrl(teacherID);
+      await this.takeScreenshot();
+      const reservableAreas = await this.page.$$(
+        Reserve.SELECTOR.RESERVABLE_AREA,
+      );
+      for (const element of reservableAreas) {
+        const reservableAreaHandle = new ReservableAreaHandle(element);
+        const reserveButton = await reservableAreaHandle.findReservableTime();
+        if (reserveButton) {
+          // reserve
+        }
+      }
     }
     console.log('Finish to reserve');
     return this.page;

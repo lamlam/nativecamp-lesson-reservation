@@ -1,3 +1,5 @@
+export type TimeSlot = { [key: string]: Array<string> };
+
 export class TimeSlotManager {
   static DAY_OF_WEEK: { [key: string]: string } = {
     sun: '日',
@@ -9,7 +11,7 @@ export class TimeSlotManager {
     sat: '土',
   };
 
-  static getPreferableTimeSlot(): { [key: string]: Array<string> } {
+  static getConvenientTimeSlot(): TimeSlot {
     /*
       example output
       {
@@ -17,7 +19,7 @@ export class TimeSlotManager {
         '火': ['08:00', '08:30', '21:00'],
       }
     */
-    const preferableTimeSlot: { [key: string]: Array<string> } = {};
+    const convenientTimeSlot: TimeSlot = {};
     [
       TimeSlotManager.DAY_OF_WEEK.mon,
       TimeSlotManager.DAY_OF_WEEK.tue,
@@ -25,8 +27,8 @@ export class TimeSlotManager {
       TimeSlotManager.DAY_OF_WEEK.thu,
       TimeSlotManager.DAY_OF_WEEK.fri,
     ].map((day) => {
-      preferableTimeSlot[day] = ['08:00', '08:30', '09:00'];
+      convenientTimeSlot[day] = ['08:00', '08:30', '09:00'];
     });
-    return preferableTimeSlot;
+    return convenientTimeSlot;
   }
 }

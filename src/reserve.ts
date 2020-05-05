@@ -34,8 +34,8 @@ async function login(
   return loginPage.login(EMAIL, PASSWORD);
 }
 
-function parseTeacherIDs(teacherIDsString: string): Array<string> {
-  return teacherIDsString.split(',');
+function parseTeacherIDs(teacherIDsString: string): Array<number> {
+  return teacherIDsString.split(',').map((id) => Number(id));
 }
 
 async function reserve(
