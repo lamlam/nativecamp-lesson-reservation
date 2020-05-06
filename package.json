@@ -2,7 +2,7 @@
   "name": "native-camp-reserve",
   "version": "0.0.1",
   "scripts": {
-    "reserve": "ts-node ./src/reserve.js",
+    "reserve": "ts-node ./src/reserve.ts",
     "lint": "eslint src/**/*.ts && yarn tsc --noEmit",
     "build": "tsc"
   },
