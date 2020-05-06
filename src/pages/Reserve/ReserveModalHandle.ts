@@ -1,4 +1,4 @@
-import { Page, ElementHandle } from 'puppeteer';
+import { Page } from 'puppeteer';
 import { ReserveButton } from './ReserveButton';
 
 // Order of reserve modal view
