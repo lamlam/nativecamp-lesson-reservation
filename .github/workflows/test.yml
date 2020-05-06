@@ -1,13 +1,11 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: NativeCamp Reservation
+name: Test
 
 on:
   push:
     branches: [master]
-  schedule:
-    - cron: '*/10 0-15 * * *'
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
@@ -18,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - run: mkdir screenshots
 
       - name: Setup nodejs
         uses: actions/setup-node@v1
@@ -41,17 +37,5 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Reserve
-        uses: lamlam/headless-chrome-nodejs@1.0.1
-        with:
-          args: yarn reserve
-        env:
-          NC_EMAIL: ${{ secrets.NC_EMAIL }}
-          NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
-          RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
-
-      - name: Archive screenshots
-        uses: actions/upload-artifact@v1
-        with:
-          name: screenshots
-          path: screenshots
+      - name: lint
+        run: yarn lint
