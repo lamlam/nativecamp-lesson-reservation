@@ -47,7 +47,7 @@ jobs:
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
 
       - name: Notify slack if succeed reserve
-        if: env.RESERVED == true
+        if: env.RESERVED == 'true'
         id: slack
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
