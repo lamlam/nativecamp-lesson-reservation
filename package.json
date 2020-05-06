@@ -10,6 +10,7 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "dayjs": "^1.8.26",
     "husky": "^4.2.5",
     "lint-staged": "^10.1.6",
     "prettier": "^2.0.4",
@@ -26,7 +27,7 @@
   "lint-staged": {
     "*.ts": [
       "prettier --write",
-      "eslint src --fix"
+      "eslint src/**/*.ts --fix"
     ]
   },
   "devDependencies": {

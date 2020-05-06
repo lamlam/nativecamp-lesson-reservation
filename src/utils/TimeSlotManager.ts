@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+
 export type TimeSlot = { [key: string]: Array<string> };
 
 export class TimeSlotManager {
@@ -11,6 +14,16 @@ export class TimeSlotManager {
     sat: '土',
   };
 
+  static DAY_OF_WEEK_BY_NUM: { [key: number]: string } = {
+    0: '日',
+    1: '月',
+    2: '火',
+    3: '水',
+    4: '木',
+    5: '金',
+    6: '土',
+  };
+
   static getConvenientTimeSlot(): TimeSlot {
     /*
       example output
@@ -21,14 +34,24 @@ export class TimeSlotManager {
     */
     const convenientTimeSlot: TimeSlot = {};
     [
-      TimeSlotManager.DAY_OF_WEEK.mon,
-      TimeSlotManager.DAY_OF_WEEK.tue,
-      TimeSlotManager.DAY_OF_WEEK.wed,
-      TimeSlotManager.DAY_OF_WEEK.thu,
-      TimeSlotManager.DAY_OF_WEEK.fri,
+      this.DAY_OF_WEEK.mon,
+      this.DAY_OF_WEEK.tue,
+      this.DAY_OF_WEEK.wed,
+      this.DAY_OF_WEEK.thu,
+      this.DAY_OF_WEEK.fri,
     ].map((day) => {
       convenientTimeSlot[day] = ['08:00', '08:30', '09:00'];
     });
+
+    dayjs.locale('jp');
+    delete convenientTimeSlot[this.DAY_OF_WEEK_BY_NUM[dayjs().day()]];
+
+    if (dayjs().hour() > 22) {
+      delete convenientTimeSlot[
+        this.DAY_OF_WEEK_BY_NUM[dayjs().add(1, 'day').day()]
+      ];
+    }
+
     return convenientTimeSlot;
   }
 }
