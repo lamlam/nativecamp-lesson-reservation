@@ -151,6 +151,7 @@ export class ReserveModalHandle {
 
     this.state = State.ModalClosed;
     console.log('Succeed reservation');
+    process.env.RESERVED = 'true';
   }
 
   async reserve(reserveButton: ReserveButton): Promise<void> {

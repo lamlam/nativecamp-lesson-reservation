@@ -46,6 +46,17 @@ jobs:
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
 
+      - name: Notify slack if succeed reserve
+        if: env.RESERVED == true
+        id: slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: nativecamp
+          status: success
+          color: good
+
       - name: Archive screenshots
         uses: actions/upload-artifact@v1
         with:
