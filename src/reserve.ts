@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import { ScreenshotManager } from './utils/ScreenshotManager';
 import { Login } from './pages/Login';
-import { Reserve } from './pages/Reserve';
+import { Reserve } from './pages/Reserve/Reserve';
 
 async function initPage(): Promise<puppeteer.Page> {
   const options: puppeteer.LaunchOptions = {

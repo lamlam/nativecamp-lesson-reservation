@@ -1,27 +1,13 @@
-import { Page, ElementHandle } from 'puppeteer';
-import { ScreenshotManager } from '../utils/ScreenshotManager';
-import { Login } from './Login';
+import { Page } from 'puppeteer';
+import { ScreenshotManager } from '../../utils/ScreenshotManager';
+import { Login } from '../Login';
 import { ReservableAreaHandle } from './ReservableAreaHandle';
+import { ReserveModalHandle } from './ReserveModalHandle';
 
 export class Reserve {
   static nativecampTopUrl = 'https://nativecamp.net/';
 
   static SELECTOR: { [key: string]: string } = {
-    RESERVABLE_BUTTON: '.btn_style.btn_green.forReservation',
-    DOUBLE_BOOKING_BUTTON: '.btn_style.double_booking',
-    ALREADY_RSERVED_BUTTON: '.btn_style.reserved.forCancellation',
-    RESERVE_MODAL_VISIBLE: '.title.t_truncate',
-    RESERVE_SELECT_COURSE_BUTTON:
-      '#chooseReservedSchedule.btn_style.btn_green.btnLessonOrReserve',
-    RESERVE_ALT_TEACHER_SWITCH: '.nc_ui_checkbox_switch_slider',
-    RESERVE_ALT_TEACHER_BUTTON:
-      '#chooseReservedSchedule.btn_style.btn_green.close_modal',
-    RESERVE_CONFIRM_MODAL: '#dialog_schedule_reserve_confirm',
-    RESERVE_CONFIRM_BUTTON:
-      '#saveReservedSchedule.btn_style.btn_green.close_modal.btnReservationConfirmed',
-    RESERVE_COMPLETE_MODAL: '#dialog_schedule_reserve_complete',
-    RESERVE_COMPLETE_MODAL_CLOSE_BUTTON:
-      '#dialog_schedule_reserve_complete > .btn_close.close_modal',
     RESERVABLE_AREA: 'tr.free_reservable_area',
   };
 
@@ -57,10 +43,21 @@ export class Reserve {
         Reserve.SELECTOR.RESERVABLE_AREA,
       );
       for (const element of reservableAreas) {
-        const reservableAreaHandle = new ReservableAreaHandle(element);
-        const reserveButton = await reservableAreaHandle.findReservableTime();
-        if (reserveButton) {
-          // reserve
+        try {
+          const reservableAreaHandle = new ReservableAreaHandle(
+            this.page,
+            element,
+          );
+          const reserveButton = await reservableAreaHandle.findReservableTime();
+          if (reserveButton) {
+            const reserveModalHandle = new ReserveModalHandle(this.page);
+            await reserveModalHandle.reserve(reserveButton);
+          }
+        } catch (e) {
+          await this.takeScreenshot();
+          console.log(
+            'Failed reserved by some error. Try to reserve other day.',
+          );
         }
       }
     }

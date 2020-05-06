@@ -1,32 +1,22 @@
-import { ElementHandle } from 'puppeteer';
-import { TimeSlotManager, TimeSlot } from '../utils/TimeSlotManager';
+import { ElementHandle, Page } from 'puppeteer';
+import { TimeSlotManager, TimeSlot } from '../../utils/TimeSlotManager';
+import { ReserveButton } from './ReserveButton';
 
 export class ReservableAreaHandle {
   private element: ElementHandle;
   private day: string;
+  private page: Page;
 
   private SELECTOR: { [key: string]: string } = {
     RESERVABLE_BUTTON: '.btn_style.btn_green.forReservation',
     DOUBLE_BOOKING_BUTTON: '.btn_style.double_booking',
     ALREADY_RSERVED_BUTTON: '.btn_style.reserved.forCancellation',
-    RESERVE_MODAL_VISIBLE: '.title.t_truncate',
-    RESERVE_SELECT_COURSE_BUTTON:
-      '#chooseReservedSchedule.btn_style.btn_green.btnLessonOrReserve',
-    RESERVE_ALT_TEACHER_SWITCH: '.nc_ui_checkbox_switch_slider',
-    RESERVE_ALT_TEACHER_BUTTON:
-      '#chooseReservedSchedule.btn_style.btn_green.close_modal',
-    RESERVE_CONFIRM_MODAL: '#dialog_schedule_reserve_confirm',
-    RESERVE_CONFIRM_BUTTON:
-      '#saveReservedSchedule.btn_style.btn_green.close_modal.btnReservationConfirmed',
-    RESERVE_COMPLETE_MODAL: '#dialog_schedule_reserve_complete',
-    RESERVE_COMPLETE_MODAL_CLOSE_BUTTON:
-      '#dialog_schedule_reserve_complete > .btn_close.close_modal',
-    RESERVABLE_AREA: 'tr.free_reservable_area',
   };
 
-  constructor(reservableAreaElement: ElementHandle) {
+  constructor(page: Page, reservableAreaElement: ElementHandle) {
     this.element = reservableAreaElement;
     this.day = '';
+    this.page = page;
   }
 
   private async setDay(): Promise<string> {
@@ -46,7 +36,7 @@ export class ReservableAreaHandle {
 
   private async isDoubleBookingDay(): Promise<boolean> {
     const doubleBookingElement = await this.element.$(
-      this.SELECTOR.DOUBLE_BOOKING_BUTTON_SELECTER,
+      this.SELECTOR.DOUBLE_BOOKING_BUTTON,
     );
     if (doubleBookingElement) {
       console.log(`${this.day} has double booking`);
@@ -57,7 +47,7 @@ export class ReservableAreaHandle {
 
   private async isReservedDay(): Promise<boolean> {
     const alreadyRservedElement = await this.element.$(
-      this.SELECTOR.ALREADY_RSERVED_BUTTON_SELECTER,
+      this.SELECTOR.ALREADY_RSERVED_BUTTON,
     );
     if (alreadyRservedElement) {
       console.log(`${this.day} has already reserved`);
@@ -68,9 +58,9 @@ export class ReservableAreaHandle {
 
   private async findReservableTimeFromTimeSlot(
     timeSlot: TimeSlot,
-  ): Promise<ElementHandle | null> {
+  ): Promise<ReserveButton | null> {
     const reserveButtons = await this.element.$$(
-      this.SELECTOR.RESERVABLE_BUTTON_SELECTER,
+      this.SELECTOR.RESERVABLE_BUTTON,
     );
     if (reserveButtons.length === 0) {
       console.log(`Reservable time not found in ${this.day}`);
@@ -79,14 +69,14 @@ export class ReservableAreaHandle {
 
     for (const reserveButton of reserveButtons) {
       try {
-        const time = await this.element.evaluate(
+        const time = await this.page.evaluate(
           (node) => (node as HTMLElement).innerText,
           reserveButton,
         );
         if (timeSlot[this.day].indexOf(time) === -1) {
           continue;
         }
-        return reserveButton;
+        return new ReserveButton(this.page, reserveButton, time);
       } catch (e) {
         console.log(e);
         continue;
@@ -97,7 +87,7 @@ export class ReservableAreaHandle {
     return null;
   }
 
-  async findReservableTime(): Promise<ElementHandle | null> {
+  async findReservableTime(): Promise<ReserveButton | null> {
     await this.setDay();
     const timeSlot = TimeSlotManager.getConvenientTimeSlot();
     if (
