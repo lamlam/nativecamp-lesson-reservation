@@ -46,6 +46,9 @@ jobs:
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
 
+      - name: Set env if should Notify
+        run: yarn ts-node setEnvIfShouldNotice.ts
+
       - name: Notify slack if succeed reserve
         if: env.RESERVED == 'true'
         id: slack

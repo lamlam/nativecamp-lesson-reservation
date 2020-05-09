@@ -146,4 +146,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Notify status file for github action
+SHOULD_NOTIFY
 
