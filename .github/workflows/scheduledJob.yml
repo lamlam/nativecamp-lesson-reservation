@@ -39,6 +39,7 @@ jobs:
 
       - name: Reserve
         uses: lamlam/headless-chrome-nodejs@1.0.1
+        id: reserve
         with:
           args: yarn reserve
         env:
@@ -46,11 +47,8 @@ jobs:
           NC_PASSWORD: ${{ secrets.NC_PASSWORD }}
           RESERVE_TEACHER_IDS: ${{ secrets.RESERVE_TEACHER_IDS }}
 
-      - name: Set env if should Notify
-        run: yarn ts-node setEnvIfShouldNotice.ts
-
       - name: Notify slack if succeed reserve
-        if: env.RESERVED == 'true'
+        if: steps.reserve.outputs.shouldNotify == 'true'
         id: slack
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

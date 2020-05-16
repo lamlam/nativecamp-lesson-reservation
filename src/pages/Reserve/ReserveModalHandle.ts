@@ -1,6 +1,5 @@
 import { Page } from 'puppeteer';
 import { ReserveButton } from './ReserveButton';
-import { touchFile } from '../../utils/touchFile';
 
 // Order of reserve modal view
 const State = {
@@ -153,7 +152,7 @@ export class ReserveModalHandle {
     this.state = State.ModalClosed;
     console.log('Succeed reservation');
     if (process.env.GITHUB_ACTION) {
-      touchFile('SHOULD_NOTIFY');
+      console.log('::set-output name=shouldNotify::true');
     }
   }
 
