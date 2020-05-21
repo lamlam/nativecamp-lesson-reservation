@@ -34,7 +34,7 @@ export class TimeSlotManager {
     */
     const convenientTimeSlot: TimeSlot = {};
     [
-      this.DAY_OF_WEEK.mon,
+      // this.DAY_OF_WEEK.mon,
       this.DAY_OF_WEEK.tue,
       this.DAY_OF_WEEK.wed,
       this.DAY_OF_WEEK.thu,
