@@ -46,7 +46,7 @@ export class TimeSlotManager {
     dayjs.locale('jp');
     delete convenientTimeSlot[this.DAY_OF_WEEK_BY_NUM[dayjs().day()]];
 
-    if (dayjs().hour() > 22) {
+    if (dayjs().hour() >= 22) {
       delete convenientTimeSlot[
         this.DAY_OF_WEEK_BY_NUM[dayjs().add(1, 'day').day()]
       ];
