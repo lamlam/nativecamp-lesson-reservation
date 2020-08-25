@@ -40,6 +40,9 @@ jobs:
       - name: lint
         run: yarn lint
 
+      - name: unit test
+        run: yarn test
+
       - name: Notify slack if succeed
         if: success()
         id: slack
