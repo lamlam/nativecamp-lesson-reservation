@@ -11,9 +11,6 @@
   "description": "",
   "dependencies": {
     "dayjs": "^1.8.34",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.12",
-    "prettier": "^2.1.0",
     "puppeteer": "^5.2.1"
   },
   "engines": {
@@ -39,6 +36,9 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.12",
+    "prettier": "^2.1.0"
   }
 }
