@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 export type TimeSlot = { [key: string]: Array<string> };
 
@@ -43,13 +45,17 @@ export class TimeSlotManager {
       convenientTimeSlot[day] = ['08:00', '08:30', '09:00'];
     });
 
-    dayjs.locale('jp');
-    delete convenientTimeSlot[this.DAY_OF_WEEK_BY_NUM[dayjs().day()]];
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+    dayjs.locale('ja');
+    const d = dayjs().tz('Asia/Tokyo');
 
-    if (dayjs().hour() >= 22) {
+    if (d.hour() >= 22) {
       delete convenientTimeSlot[
-        this.DAY_OF_WEEK_BY_NUM[dayjs().add(1, 'day').day()]
+        this.DAY_OF_WEEK_BY_NUM[dayjs().tz('Asia/Tokyo').add(1, 'day').day()]
       ];
+    } else if (d.hour() <= 9) {
+      delete convenientTimeSlot[this.DAY_OF_WEEK_BY_NUM[d.day()]];
     }
 
     return convenientTimeSlot;

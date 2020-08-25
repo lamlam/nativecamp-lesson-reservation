@@ -4,7 +4,8 @@
   "scripts": {
     "reserve": "ts-node ./src/reserve.ts",
     "lint": "eslint src/**/*.ts && yarn tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "author": "Naoto Saito",
   "license": "MIT",
