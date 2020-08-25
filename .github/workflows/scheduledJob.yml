@@ -5,8 +5,7 @@ name: NativeCamp Reservation
 
 on:
   schedule:
-    - cron: '*/10 0-14 * * *'
-    - cron: '*/10 16-23 * * *'
+    - cron: '*/30 * * * *'
 
 env:
   PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
@@ -21,7 +20,7 @@ jobs:
       - name: Setup nodejs
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
