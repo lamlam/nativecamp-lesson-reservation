@@ -38,7 +38,7 @@ jobs:
         run: yarn
 
       - name: Reserve
-        uses: lamlam/headless-chrome-nodejs@1.0.1
+        uses: lamlam/headless-chrome-nodejs@1.1.0
         id: reserve
         with:
           args: yarn reserve
